@@ -16,18 +16,21 @@ def random(maxSize, numberPizzaShapes, pizzaShapes):
 	total = 0
 	max_score = 0
 	best_res = {}
+	l = [1,2,3]
+	random.shuffle(l)
 	
 	
 	for att in range(100):
 		res = {}
 		total = 0
 		pizzaShapesShuffledOrder = [x for x in range(numberPizzaShapes)]
+		print(pizzaShapesShuffledOrder)
 		random.shuffle(pizzaShapesShuffledOrder)
 		for i in pizzaShapesShuffledOrder:
 			size = pizzaShapes[i]
 			if((total + size) <= maxSize):
 				total += size
-				res.add(str(i))
+				res.add(i)
 		#set best if improved
 		if total > max_score:
 			best_res =  res
@@ -82,14 +85,13 @@ def main():
 		2: random
     }
 	func = switcher.get(method, lambda: "Invalid function")
-	print("func = ",func)
 	
 	resultList = func(maxSize, numberPizzaShapes, pizzaShapes)
 	
 	#output the results 
 	fout = open(fileout,"w")
 	fout.write(str(len(resultList)) + "\n")
-	fout.write(" ".join(resultList))
+	fout.write(" ".join([str(x) for x in resultList]))
 	fout.close()
 		
 	
