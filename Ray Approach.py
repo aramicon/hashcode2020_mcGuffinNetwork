@@ -6,7 +6,8 @@ switcher = {
     0: Methods.test,
     1: Methods.dumb,
     2: Methods.random,
-    3: Methods.greedy
+    3: Methods.greedy,
+    4: Methods.flipGreedy
     # 3: Methods.knapsackSolution
 }
 
@@ -90,7 +91,7 @@ def parseInput(filein):
 
 
 def main():
-    runTest = ['a', 3]
+    runTest = ['b', 4]
 
     # Setting up function of choice and data to be worked on
     dataSetup = setup(runTest)

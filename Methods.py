@@ -1,4 +1,5 @@
 import random
+from Utils import Utils
 
 class Methods:
 
@@ -44,11 +45,23 @@ class Methods:
         return best_res
 
     def greedy(dataset):
+        # print([x for x in dataset['pizzas']])
         slices = 0
         solution = []
         for i in range(len(dataset['pizzas'])):
-            print("Greedy Search " + str(slices + dataset['pizzas'][i]) + " : " + str(dataset['knapsize']))
+            # print("Greedy Search " + str(dataset['pizzas'][i]) + " : " + str(dataset['knapsize']))
+
             if slices + dataset['pizzas'][i] <= dataset['knapsize']:
                 slices = slices + dataset['pizzas'][i]
                 solution.append(i)
+
+            # print(slices)
         return solution
+
+    def flipGreedy(dataset):
+        dataset['pizzas'].reverse()
+        output = Methods.greedy(dataset)
+        output = [len(dataset['pizzas']) - 1 - x for x in output]
+        output.reverse()
+        return output
+
