@@ -6,7 +6,10 @@ class Methods:
         print(input)
         return 'hello world'
 
-    def dumb(maxSize, numberPizzaShapes, pizzaShapes):
+    def dumb(dataset):
+        maxSize = dataset['knapsize']
+        pizzaShapes = dataset['pizzas']
+
         res = set()
         total = 0
         for i, size in enumerate(pizzaShapes):
@@ -16,7 +19,9 @@ class Methods:
 
         return res
 
-    def random(maxSize, numberPizzaShapes, pizzaShapes):
+    def random(dataset):
+        maxSize = dataset['knapsize']
+        pizzaShapes = dataset['pizzas']
         res = set()
         total = 0
         max_score = 0
@@ -25,7 +30,7 @@ class Methods:
         for att in range(100):
             res = {}
             total = 0
-            pizzaShapesShuffledOrder = [x for x in range(numberPizzaShapes)]
+            pizzaShapesShuffledOrder = [x for x in range(len(dataset['pizzas']))]
             random.shuffle(pizzaShapesShuffledOrder)
             for i in pizzaShapesShuffledOrder:
                 size = pizzaShapes[i]
