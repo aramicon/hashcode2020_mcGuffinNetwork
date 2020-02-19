@@ -1,5 +1,6 @@
 import sys
 import random
+from sortedcontainers import SortedList, SortedSet, SortedDict 
 
 def dumb(maxSize, numberPizzaShapes, pizzaShapes):
 	res = set()
@@ -19,7 +20,7 @@ def randomDumb(maxSize, numberPizzaShapes, pizzaShapes):
 	l = [1,2,3]
 	random.shuffle(l)
 		
-	for att in range(1000):
+	for att in range(1):
 		res = set()
 		total = 0
 		pizzaShapesShuffledOrder = [x for x in range(numberPizzaShapes)]
@@ -30,7 +31,7 @@ def randomDumb(maxSize, numberPizzaShapes, pizzaShapes):
 			size = pizzaShapes[i]
 			if((total + size) <= maxSize):
 				total += size
-				res.add(size)
+				res.add(i)
 		#set best if improved
 		if total > max_score:
 			max_score = total
@@ -45,9 +46,9 @@ def randomDumb(maxSize, numberPizzaShapes, pizzaShapes):
 
 def randomRefined(maxSize, numberPizzaShapes, pizzaShapes):
 	#use the basic random then try to tweak the final set before returning
-	basicRandom = randomDumb(maxSize, numberPizzaShapes, pizzaShapes)
-	pizzaShapes_used = set([pizzaShapes[b] for b in basicRandom])
-	print("final score 2= ",sum([pizzaShapes[p] for p in basicRandom]))
+	basicRandomIndexes = randomDumb(maxSize, numberPizzaShapes, pizzaShapes) #indexes
+	pizzaShapes_used = set([pizzaShapes[b] for b in basicRandomIndexes]) #shapes
+	print("final score 2= ",sum([pizzaShapes[p] for p in basicRandomIndexes]))
 	
 	print("pizzaShapes_used ",pizzaShapes_used)
 	total = sum(pizzaShapes_used)
@@ -57,36 +58,39 @@ def randomRefined(maxSize, numberPizzaShapes, pizzaShapes):
 	
 	#print("pizzaShapes_notUsed: ",pizzaShapes_notUsed)
 	if(pizzaShapes_notUsed):
-		basicRandom_list = list(pizzaShapes_used)
-		basicRandom_list.sort()
+		pizzaShapes_usedList = SortedList(pizzaShapes_used)
+		print("pizzaShapes_usedList", pizzaShapes_usedList)
+		
 		pizzaShapes_notUsed_list = list(pizzaShapes_notUsed)
 		
 		#print(pizzaShapes_notUsed_list)
 		pizzaShapes_notUsed_list.sort(reverse=True)
 		#try to replace items if possible
 		for i in pizzaShapes_notUsed_list:
-			#print("check number ", i)
+			print("can I use pizza size ", i,"?")
 			replace_check = True
 			replace_k = 0
-			k = 0
-			#print("replace_check ",replace_check, ", k ", k, " len(basicRandom_list) ", len(basicRandom_list))
-			while(replace_check and k<len(basicRandom_list)):
-				#print("can replace ",basicRandom_list[k]," with ",i," if it puts total to ",((total-basicRandom_list[k])+i)," and maxSize is ",maxSize,"?")
-				replace_check = False
-				if i > basicRandom_list[k]  and (((total-basicRandom_list[k])+i) <= maxSize):
+			k = len(pizzaShapes_usedList)-1
+			print("replace_check ",replace_check, ", k ", k, " len(pizzaShapes_usedList) ", len(pizzaShapes_usedList))
+			while(replace_check and k>=0):
+				print("k = ",k,",len(shapes)=",len(pizzaShapes_usedList), ". Can I replace ",pizzaShapes_usedList[k]," with ",i," if it puts total to ",((total-pizzaShapes_usedList[k])+i)," and maxSize is ",maxSize,"?")
+				
+				if i > pizzaShapes_usedList[k]  and (((total-pizzaShapes_usedList[k])+i) <= maxSize):
 					replace_check = True
-					replace_k = basicRandom_list[k]
-				k+=1
+					replace_k = pizzaShapes_usedList[k]
+					#replace_check = False
+				k-=1
 			if replace_k > 0:
-				print("can replace ",basicRandom_list[k]," with ",i," as it puts total to ",((total-basicRandom_list[k])+i)," and maxSize is ",maxSize,"")
-				pizzaShapes_notUsed.remove(i)
-				basicRandom.remove(pizzaShapes.index(replace_k))
-				basicRandom.add(pizzaShapes.index(i))
+				print("can replace ",pizzaShapes_usedList[k]," with ",i," as it puts total to ",((total-pizzaShapes_usedList[k])+i)," and maxSize is ",maxSize,"")
+				total = ((total-pizzaShapes_usedList[k])+i)
+				pizzaShapes_usedList.discard(k)
+				pizzaShapes_usedList.add(i)			
+				
 	else:
 		print("all pizza shapes were used")
-			
-	
-	return basicRandom
+		
+	res = [pizzaShapes.index(h) for h in pizzaShapes_usedList]
+	return basicRandomIndexes
 
 
 def main():
