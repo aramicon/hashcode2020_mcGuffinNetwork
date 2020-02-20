@@ -5,7 +5,7 @@ from Methods import Methods
 switcher = {
     0: Methods.test,
     1: Methods.dumb,
-    2: Methods.random,
+    2: Methods.roundR,
     3: Methods.basicH,
     4: Methods.flipGreedy,
     5: Methods.knapsolve,
@@ -21,7 +21,8 @@ file_switcher = {
     'b': '_read_on',
     'c': '_incunabula',
     'd': '_tough_choices',
-    'e': '_libraries_of_the_world'
+    'e': '_so_many_books',
+    'f': '_libraries_of_the_world'
 }
 
 seperator = ''
@@ -110,7 +111,7 @@ def parseInput(filein):
         'scores': score,
         'libs': []
     }
-
+    increment = 0
     while True:
 
         deets = [int(x) for x in fin.readline().split()]
@@ -119,11 +120,15 @@ def parseInput(filein):
         if not collection:
             break  # EOF
 
-        dataset['libs'].append({'libBooks': deets[0],
+        dataset['libs'].append({'id': increment,
+                                'libBooks': deets[0],
                                 'sign': deets[1],
                                 'bpd': deets[2],
                                 'collection': collection
                                 })
+        increment = increment + 1
+        print(increment)
+
 
     print(dataset)
 
@@ -148,7 +153,7 @@ def solutionSolveAll(method):
 
 
 def main():
-    runTest = ['c', 1]
+    runTest = ['a', 0]
 
     # Setting up function of choice and data to be worked on
     dataSetup = setup(runTest)
