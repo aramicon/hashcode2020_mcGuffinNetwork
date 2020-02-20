@@ -1,5 +1,6 @@
 import random
 import progressbar
+from Utils import Utils
 
 dataList = "pizzas"
 size = "knapsize"
@@ -103,9 +104,9 @@ class Methods:
         print("maxSignOnDelay ",maxSignOnDelay,"maxBookAverageScore ",maxBookAverageScore,"maxBooksPerDay ",maxBooksPerDay,"maxCollectionSize ",maxCollectionSize)
 
         BookAverageScoreWeight = 20
-        SignOnDelayWeight = 10
+        SignOnDelayWeight = 2
         CollectionSizeWeight = 10
-        BooksPerDayWeight = 10
+        BooksPerDayWeight = 20
 
         for l in libs:
             l["sortweight"] = (l["averageBookScore"]/maxBookAverageScore)*BookAverageScoreWeight + (0-l["sign"]/maxSignOnDelay)*SignOnDelayWeight + (len(l["collection"])/maxCollectionSize)*CollectionSizeWeight + (l["bpd"]/maxBooksPerDay)*BooksPerDayWeight
@@ -113,6 +114,7 @@ class Methods:
 
         #sort by delay so you start using the first lib ready
         newlist = sorted(libs, key=lambda l: l["sign"])
+
 
 
         print("sorted list with lambda")

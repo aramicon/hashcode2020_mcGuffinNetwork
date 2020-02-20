@@ -176,12 +176,12 @@ def main():
 
     # print(data)
 
-    Utils.booksOwned(data)
+    #Utils.booksOwned(data)
 
-    # resultList = func(data)
+    resultList = func(data)
 
     # Outputing reults
-    # outputResults(dataSetup[2], resultList)
+    outputResults(dataSetup[2], resultList)
 
 
 main()
