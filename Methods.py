@@ -104,7 +104,7 @@ class Methods:
 
         BookAverageScoreWeight = 20
         SignOnDelayWeight = 10
-        CollectionSizeWeight = 1
+        CollectionSizeWeight = 10
         BooksPerDayWeight = 10
 
         for l in libs:
@@ -120,10 +120,12 @@ class Methods:
         res["numLibs"] = numLibs
 
         resLibDetails = []
+        print("add to results object")
         for lib in newlist:
             resLibDetails.append({"id": lib["id"], "numBooks": len(lib["collection"]), "books": [k for k in lib["collection"]]})
 
         res["libs"] = resLibDetails
+        print("return results")
         return res
 
     def flipGreedy(dataset):

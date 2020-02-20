@@ -65,24 +65,25 @@ def setup(arguments):
 
 def outputResults(fileout, resultList):
     # output the results
+    print("write to file")
     fout = open(fileout, "w")
 
     # Defining output string
     # --------------------------------------------------------
 
     #finalOutput = " ".join([str(x) for x in resultList])
-    finalOutput = str(resultList["numLibs"]) + "\n"
+    fout.write(str(resultList["numLibs"]) + "\n")
     for lib in resultList["libs"]:
-        finalOutput += str(lib["id"]) + " " + str(lib["numBooks"]) + "\n"
+        fout.write(str(lib["id"]) + " " + str(lib["numBooks"]) + "\n")
         for l in lib["books"]:
-            finalOutput += str(l) + " "
-        finalOutput += "\n"
+            fout.write(str(l) + " ")
+        fout.write("\n")
 
     # Printing to file / console
     # --------------------------------------------------------
 
     # fout.write(str(len(resultList)) + "\n")
-    fout.write(finalOutput)
+
 
     #print(resultList)
     print("output saved to file")
