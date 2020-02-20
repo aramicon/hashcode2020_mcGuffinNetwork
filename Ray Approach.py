@@ -5,7 +5,7 @@ from Methods import Methods
 switcher = {
     0: Methods.test,
     1: Methods.dumb,
-    2: Methods.random,
+    2: Methods.roundR,
     3: Methods.basicH,
     4: Methods.flipGreedy,
     5: Methods.knapsolve,
@@ -126,7 +126,8 @@ def parseInput(filein):
                                 'bpd': deets[2],
                                 'collection': collection
                                 })
-        increment = increment = 1
+        increment = increment + 1
+        print(increment)
 
 
     print(dataset)
@@ -152,7 +153,7 @@ def solutionSolveAll(method):
 
 
 def main():
-    runTest = ['f', 1]
+    runTest = ['a', 0]
 
     # Setting up function of choice and data to be worked on
     dataSetup = setup(runTest)
