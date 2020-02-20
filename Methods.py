@@ -17,19 +17,18 @@ class Methods:
         return 'hello world'
 
     def dumb(dataset):
-        numBooks = dataset['numbooks']
+        numBooks = dataset['numBooks']
         days=dataset["days"]
-        numlibs = dataset["numlibs"]
+        numLibs = dataset["numLibs"]
         scores = dataset['scores']
         libs = dataset["libs"]
 
 
-        resultNumLibs = numlibs
         res = {}
-        res["numlibs"] = 2
+        res["numLibs"] = numLibs
         resLibDetails = []
         for i, lib in enumerate(libs):
-            resLibDetails.append({"id": i, "numbooks":len(lib["collection"]), "books":[k for k in lib["collection"]]})
+            resLibDetails.append({"id": i, "numBooks": len(lib["collection"]), "books": [k for k in lib["collection"]]})
 
         res["libs"] = resLibDetails
 

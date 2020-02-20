@@ -70,17 +70,17 @@ def outputResults(fileout, resultList):
     # --------------------------------------------------------
 
     #finalOutput = " ".join([str(x) for x in resultList])
-    finalOutput = resultList["numlibs"] + "\n"
+    finalOutput = str(resultList["numLibs"]) + "\n"
     for lib in resultList["libs"]:
-        finalOutput += lib["id"] + " " + lib["numbooks"] + "\n"
+        finalOutput += str(lib["id"]) + " " + str(lib["numBooks"]) + "\n"
         for l in lib["books"]:
-            finalOutput += l + " "
+            finalOutput += str(l) + " "
         finalOutput += "\n"
 
     # Printing to file / console
     # --------------------------------------------------------
 
-    fout.write(str(len(resultList)) + "\n")
+    # fout.write(str(len(resultList)) + "\n")
     fout.write(finalOutput)
 
     print(resultList)
@@ -101,7 +101,7 @@ def parseInput(filein):
     topline = [int(x) for x in fin.readline().split()]
     print(topline)
     score = [int(x) for x in fin.readline().split()]
-    print(score)
+    # print(score)
 
     dataset = {
         'numBooks': topline[0],
@@ -148,7 +148,7 @@ def solutionSolveAll(method):
 
 
 def main():
-    runTest = ['b', 0]
+    runTest = ['c', 1]
 
     # Setting up function of choice and data to be worked on
     dataSetup = setup(runTest)
@@ -162,4 +162,4 @@ def main():
 
 
 main()
-# solutionSolveAll(7)
+# solutionSolveAll(1)
