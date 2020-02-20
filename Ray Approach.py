@@ -1,6 +1,7 @@
 import sys
 import os
 from Methods import Methods
+from Utils import Utils
 
 switcher = {
     0: Methods.test,
@@ -150,20 +151,38 @@ def solutionSolveAll(method):
         # Outputing reults
         outputResults(dataSetup[2], resultList)
 
+def booksOwned(dataset):
+    print('begining data')
+
+    uniqueness= {}
+    for lib in dataset["libs"]:
+        for book in lib["collection"]:
+            if book in uniqueness.key():
+                uniqueness[book] = []
+        uniqueness[book].append(lib['id'])
+
+    print(uniqueness)
+
+
 
 def main():
-    runTest = ['a', 2]
+    runTest = ['f', 3]
 
     # Setting up function of choice and data to be worked on
     dataSetup = setup(runTest)
     func = dataSetup[0]
     data = dataSetup[1]
 
-    resultList = func(data)
+    # print(data)
+
+    Utils.booksOwned(data)
+
+    # resultList = func(data)
 
     # Outputing reults
-    outputResults(dataSetup[2], resultList)
+    # outputResults(dataSetup[2], resultList)
 
 
-# main()
-solutionSolveAll(2)
+main()
+# solutionSolveAll(3)
+# fuckingAbout()

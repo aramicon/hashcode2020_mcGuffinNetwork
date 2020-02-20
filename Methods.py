@@ -112,7 +112,7 @@ class Methods:
 
 
         #sort by delay so you start using the first lib ready
-        newlist = sorted(libs, key=lambda l: l["sortweight"],reverse=True)
+        newlist = sorted(libs, key=lambda l: l["sign"])
 
 
         print("sorted list with lambda")
