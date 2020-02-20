@@ -1,11 +1,23 @@
 class Utils:
 
-    def listToSet(listIn):
-        result = set()
+    def booksOwned(dataset):
+        print('begining data')
 
-        result.add(x for x in listIn)
+        uniqueness = {}
+        for lib in dataset["libs"]:
+            for book in lib["collection"]:
+                if book not in uniqueness:
+                    uniqueness[book] = []
+                uniqueness[book].append(lib['id'])
 
-        return result
 
-    def sortBySign(dataset):
-        libs = dataset['Libs']
+        # print(uniqueness)
+
+        return uniqueness
+
+
+
+
+
+
+
