@@ -7,9 +7,13 @@ switcher = {
     1: Methods.dumb,
     2: Methods.random,
     3: Methods.greedy,
-    4: Methods.flipGreedy
-    # 3: Methods.knapsackSolution
+    4: Methods.flipGreedy,
+    5: Methods.knapsolve,
+    6: Methods.rebuildHelper,
+    7: Methods.solvemc
 }
+
+dataset = ['a', 'b', 'c', 'd', 'e']
 
 file_switcher = {
     'a': '_example',
@@ -60,11 +64,23 @@ def setup(arguments):
 def outputResults(fileout, resultList):
     # output the results
     fout = open(fileout, "w")
+
+    # Defining output string
+    # --------------------------------------------------------
+
+    finalOutput = " ".join([str(x) for x in resultList])
+
+    # Printing to file / console
+    # --------------------------------------------------------
+
     fout.write(str(len(resultList)) + "\n")
-    fout.write(" ".join([str(x) for x in resultList]))
-    fout.close()
+    fout.write(finalOutput)
 
     print(resultList)
+    print(finalOutput)
+
+    # Close File
+    fout.close()
 
 
 def parseInput(filein):
@@ -90,8 +106,22 @@ def parseInput(filein):
     return dataFormat
 
 
+def solutionSolveAll(method):
+    for x in dataset:
+
+        dataSetup = setup([x, method])
+
+        func = dataSetup[0]
+        data = dataSetup[1]
+
+        resultList = func(data)
+
+        # Outputing reults
+        outputResults(dataSetup[2], resultList)
+
+
 def main():
-    runTest = ['b', 4]
+    runTest = ['d', 7]
 
     # Setting up function of choice and data to be worked on
     dataSetup = setup(runTest)
@@ -105,3 +135,4 @@ def main():
 
 
 main()
+# solutionSolveAll(7)
