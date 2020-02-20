@@ -103,29 +103,51 @@ class Methods:
         #add some weightings for the signon offset, the collection size, and the avg. book value
         print("maxSignOnDelay ",maxSignOnDelay,"maxBookAverageScore ",maxBookAverageScore,"maxBooksPerDay ",maxBooksPerDay,"maxCollectionSize ",maxCollectionSize)
 
-        BookAverageScoreWeight = 20
-        SignOnDelayWeight = 2
-        CollectionSizeWeight = 10
-        BooksPerDayWeight = 20
+        BookAverageScoreWeight = 2
+        SignOnDelayWeight = 6
+        CollectionSizeWeight = 1
+        BooksPerDayWeight = 1
 
         for l in libs:
-            l["sortweight"] = (l["averageBookScore"]/maxBookAverageScore)*BookAverageScoreWeight + (0-l["sign"]/maxSignOnDelay)*SignOnDelayWeight + (len(l["collection"])/maxCollectionSize)*CollectionSizeWeight + (l["bpd"]/maxBooksPerDay)*BooksPerDayWeight
+            l["sortweight"] = (l["averageBookScore"]/maxBookAverageScore)*BookAverageScoreWeight + (0-((l["sign"]/maxSignOnDelay)*SignOnDelayWeight)**2) + (len(l["collection"])/maxCollectionSize)*CollectionSizeWeight + (l["bpd"]/maxBooksPerDay)*BooksPerDayWeight
 
 
         #sort by delay so you start using the first lib ready
-        newlist = sorted(libs, key=lambda l: l["sign"])
+        newlist = sorted(libs, key=lambda l: l["sortweight"],reverse=True)
 
+        #print(newlist)
 
+        #take out book duplicates
+        alreadyUsed = {}
+        for lib in newlist:
+            for book in lib["collection"]:
+                if book in alreadyUsed:
+                    lib["collection"].remove(book)
+                else:
+                    alreadyUsed[book] = 1
+
+        #remove any empty libraries?
+        noItems = [i for i,x in enumerate(newlist) if len(x["collection"]) == 0]
+        #print("alreadyUsed: ",alreadyUsed)
+        print("found ", str(len(noItems)), " empty libraries")
+        #seems to be none.
+        #if len(noItems) > 0:
+            #remove them
+            #for l in noItems:
+            #    newlist.pop(l)
 
         print("sorted list with lambda")
         res = {}
-        res["numLibs"] = numLibs
 
+
+        numLibsC = 0
         resLibDetails = []
         print("add to results object")
         for lib in newlist:
-            resLibDetails.append({"id": lib["id"], "numBooks": len(lib["collection"]), "books": [k for k in lib["collection"]]})
-
+            if(len(lib["collection"]) > 0):
+                numLibsC+=1
+                resLibDetails.append({"id": lib["id"], "numBooks": len(lib["collection"]), "books": [k for k in lib["collection"]]})
+        res["numLibs"] = numLibsC
         res["libs"] = resLibDetails
         print("return results")
         return res
