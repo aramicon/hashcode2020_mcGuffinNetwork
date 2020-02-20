@@ -44,21 +44,33 @@ class Methods:
         max_score = 0
         best_res = {}
 
-        for att in range(100):
-            res = {}
-            total = 0
-            pizzaShapesShuffledOrder = [x for x in range(len(dataset['pizzas']))]
-            random.shuffle(pizzaShapesShuffledOrder)
-            for i in pizzaShapesShuffledOrder:
-                size = pizzaShapes[i]
-                if ((total + size) <= maxSize):
-                    total += size
-                    res.add(str(i))
-            # set best if improved
-            if total > max_score:
-                best_res = res
+        bpl = int(dataset['numBooks']/dataset['numLibs'])
 
-        return best_res
+        # print(bpl)
+
+        result = {
+            "numLibs": dataset['numLibs'],
+            "libs": []
+        }
+
+        libraries = dataset["libs"]
+        for lib in libraries:
+            collection = []
+            for bk in range(bpl):
+                if(len(lib['collection'])<=bk):
+                    break
+                collection.append(lib['collection'][bk])
+
+            libOut = {
+                "id": lib["id"],
+                "numBooks": bpl,
+                "books": collection
+            }
+            result['libs'].append(libOut)
+
+        print(result)
+        #
+        return result
 
     def basicH(dataset):
         print("you basic")
@@ -86,7 +98,7 @@ class Methods:
             if (l["bpd"] > maxBooksPerDay):
                 maxBooksPerDay+=l["bpd"]
 
-        
+
         #add some weightings for the signon offset, the collection size, and the avg. book value
         print("maxSignOnDelay ",maxSignOnDelay,"maxBookAverageScore ",maxBookAverageScore,"maxBooksPerDay ",maxBooksPerDay,"maxCollectionSize ",maxCollectionSize)
 
