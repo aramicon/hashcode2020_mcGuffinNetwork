@@ -67,13 +67,13 @@ class Methods:
         scores = dataset['scores']
         libs = dataset["libs"]
 
-        newlist = sorted(libs, key=lambda x: x.sign, reverse=True)
+        newlist = sorted(libs, key=lambda x: x.sign)
 
         res = {}
         res["numLibs"] = numLibs
         resLibDetails = []
-        for i, lib in enumerate(libs):
-            resLibDetails.append({"id": i, "numBooks": len(lib["collection"]), "books": [k for k in lib["collection"]]})
+        for lib in newlist:
+            resLibDetails.append({"id": lib["id"], "numBooks": len(lib["collection"]), "books": [k for k in lib["collection"]]})
 
         res["libs"] = resLibDetails
         return res
