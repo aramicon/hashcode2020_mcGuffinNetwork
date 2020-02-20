@@ -36,29 +36,15 @@ class Methods:
 
         return res
 
-    def random(dataset):
-        maxSize = dataset[size]
-        pizzaShapes = dataset[dataList]
-        res = set()
-        total = 0
-        max_score = 0
-        best_res = {}
+    def roundR(dataset):
 
-        for att in range(100):
-            res = {}
-            total = 0
-            pizzaShapesShuffledOrder = [x for x in range(len(dataset['pizzas']))]
-            random.shuffle(pizzaShapesShuffledOrder)
-            for i in pizzaShapesShuffledOrder:
-                size = pizzaShapes[i]
-                if ((total + size) <= maxSize):
-                    total += size
-                    res.add(str(i))
-            # set best if improved
-            if total > max_score:
-                best_res = res
+        bpl = dataset['numBooks']/dataset['numLibs']
 
-        return best_res
+
+
+
+
+        return
 
     def greedy(dataset):
         # print([x for x in dataset['pizzas']])

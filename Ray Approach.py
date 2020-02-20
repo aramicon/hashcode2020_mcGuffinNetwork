@@ -21,7 +21,8 @@ file_switcher = {
     'b': '_read_on',
     'c': '_incunabula',
     'd': '_tough_choices',
-    'e': '_libraries_of_the_world'
+    'e': '_so_many_books',
+    'f': '_libraries_of_the_world'
 }
 
 seperator = ''
@@ -110,7 +111,7 @@ def parseInput(filein):
         'scores': score,
         'libs': []
     }
-
+    increment = 0
     while True:
 
         deets = [int(x) for x in fin.readline().split()]
@@ -119,11 +120,14 @@ def parseInput(filein):
         if not collection:
             break  # EOF
 
-        dataset['libs'].append({'libBooks': deets[0],
+        dataset['libs'].append({'id': increment
+                                'libBooks': deets[0],
                                 'sign': deets[1],
                                 'bpd': deets[2],
                                 'collection': collection
                                 })
+        increment = increment = 1
+
 
     print(dataset)
 
@@ -148,7 +152,7 @@ def solutionSolveAll(method):
 
 
 def main():
-    runTest = ['c', 1]
+    runTest = ['f', 1]
 
     # Setting up function of choice and data to be worked on
     dataSetup = setup(runTest)
