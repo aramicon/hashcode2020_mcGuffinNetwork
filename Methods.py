@@ -38,13 +38,33 @@ class Methods:
 
     def roundR(dataset):
 
-        bpl = dataset['numBooks']/dataset['numLibs']
+        bpl = int(dataset['numBooks']/dataset['numLibs'])
 
+        # print(bpl)
 
+        result = {
+            "numLibs": dataset['numLibs'],
+            "libs": []
+        }
 
+        libraries = dataset["libs"]
+        for lib in libraries:
+            collection = []
+            for bk in range(bpl):
+                if(len(lib['collection'])<=bk):
+                    break
+                collection.append(lib['collection'][bk])
 
+            libOut = {
+                "id": lib["id"],
+                "numBooks": bpl,
+                "books": collection
+            }
+            result['libs'].append(libOut)
 
-        return
+        print(result)
+        #
+        return result
 
     def basicH(dataset):
         numBooks = dataset['numBooks']

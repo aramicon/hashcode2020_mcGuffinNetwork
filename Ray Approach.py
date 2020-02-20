@@ -124,7 +124,7 @@ def parseInput(filein):
                                 'libBooks': deets[0],
                                 'sign': deets[1],
                                 'bpd': deets[2],
-                                'collection': collection
+                                'collection': list(set(collection))
                                 })
         increment = increment + 1
         print(increment)
@@ -153,7 +153,7 @@ def solutionSolveAll(method):
 
 
 def main():
-    runTest = ['a', 0]
+    runTest = ['a', 2]
 
     # Setting up function of choice and data to be worked on
     dataSetup = setup(runTest)
@@ -166,5 +166,5 @@ def main():
     outputResults(dataSetup[2], resultList)
 
 
-main()
-# solutionSolveAll(1)
+# main()
+solutionSolveAll(2)
