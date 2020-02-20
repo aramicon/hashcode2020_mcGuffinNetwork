@@ -18,10 +18,10 @@ dataset = ['a', 'b', 'c', 'd', 'e']
 
 file_switcher = {
     'a': '_example',
-    'b': '_small',
-    'c': '_medium',
-    'd': '_quite_big',
-    'e': '_also_big'
+    'b': '_read_on',
+    'c': '_incunabula',
+    'd': '_tough_choices',
+    'e': '_libraries_of_the_world'
 }
 
 seperator = ''
@@ -49,7 +49,7 @@ def setup(arguments):
 
     filebase += str(file_switcher.get(filebase))
 
-    filein = "data" + seperator + filebase + ".in"
+    filein = "data" + seperator + filebase + ".txt"
     fileout = "data" + seperator + filebase + ".out"
 
     # Formatting Data and selecting function
@@ -96,20 +96,40 @@ def parseInput(filein):
     # Parsing Method into data Object
     # ----------------------------------------------
 
-    topline = fin.readline().split()
-    maxSize = int(topline[0])
-    # numberPizzaShapes = int(topline[1])
-    pizzaShapes = [int(x) for x in fin.readline().split()]
 
-    dataFormat = {
-        'knapsize': maxSize,
-        'pizzas': pizzaShapes
+    topline = [int(x) for x in fin.readline().split()]
+    print(topline)
+    score = [int(x) for x in fin.readline().split()]
+    print(score)
+
+    dataset = {
+        'numBooks': topline[0],
+        'numLibs': topline[1],
+        'days': topline[2],
+        'scores': score,
+        'libs': []
     }
+
+    while True:
+
+        deets = [int(x) for x in fin.readline().split()]
+        collection = [int(x) for x in fin.readline().split()]
+
+        if not collection:
+            break  # EOF
+
+        dataset['libs'].append({'libBooks': deets[0],
+                                'sign': deets[1],
+                                'bpd': deets[2],
+                                'collection': collection
+                                })
+
+    print(dataset)
 
     # ----------------------------------------------
     # End Parsing, Close file and return data format
     fin.close()
-    return dataFormat
+    return dataset
 
 
 def solutionSolveAll(method):
@@ -127,7 +147,7 @@ def solutionSolveAll(method):
 
 
 def main():
-    runTest = ['d', 7]
+    runTest = ['b', 0]
 
     # Setting up function of choice and data to be worked on
     dataSetup = setup(runTest)

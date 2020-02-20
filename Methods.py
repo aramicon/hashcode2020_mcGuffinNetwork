@@ -1,6 +1,9 @@
 import random
 import progressbar
 
+dataList = "pizzas"
+size = "knapsize"
+
 class Methods:
 
     def score(solution, dataset):
@@ -35,8 +38,8 @@ class Methods:
         return res
 
     def random(dataset):
-        maxSize = dataset['knapsize']
-        pizzaShapes = dataset['pizzas']
+        maxSize = dataset[size]
+        pizzaShapes = dataset[dataList]
         res = set()
         total = 0
         max_score = 0
@@ -62,28 +65,28 @@ class Methods:
         # print([x for x in dataset['pizzas']])
         slices = 0
         solution = []
-        for i in range(len(dataset['pizzas'])):
+        for i in range(len(dataset[dataList])):
             # print("Greedy Search " + str(dataset['pizzas'][i]) + " : " + str(dataset['knapsize']))
 
-            if slices + dataset['pizzas'][i] <= dataset['knapsize']:
-                slices = slices + dataset['pizzas'][i]
+            if slices + dataset[dataList][i] <= dataset[dataList]:
+                slices = slices + dataset[dataList][i]
                 solution.append(i)
 
             # print(slices)
         return solution
 
     def flipGreedy(dataset):
-        dataset['pizzas'].reverse()
+        dataset[dataList].reverse()
         output = Methods.greedy(dataset)
-        output = [len(dataset['pizzas']) - 1 - x for x in output]
+        output = [len(dataset[dataList]) - 1 - x for x in output]
         output.reverse()
         return output
 
     def knapsolve(dataset):
-        maxscore = dataset['knapsize']
+        maxscore = dataset[size]
         dp = [None for _ in range(maxscore + 1)]
         dp[0] = []
-        for idx, item in progressbar.progressbar(list(enumerate(dataset['pizzas']))):
+        for idx, item in progressbar.progressbar(list(enumerate(dataset[dataList]))):
             for i in range(maxscore - item, -1, -1):
                 if dp[i] is None: continue
                 dp[i + item] = dp[i] + [idx]
@@ -101,35 +104,35 @@ class Methods:
         newsol = list(solution)
         for i in range(min(len(newsol), 3)):
             idx = random.randrange(len(newsol))
-            print(idx, dataset['pizzas'][newsol[idx]])
+            print(idx, dataset[dataList][newsol[idx]])
             del newsol[idx]
         newscore = Methods.score(newsol, dataset)
-        remaining = dataset['knapsize'] - newscore
+        remaining = dataset[size] - newscore
         st = set(newsol)
         newpizz = []
-        for i in range(len(dataset['pizzas'])):
+        for i in range(len(dataset[dataList])):
             if i in st:
                 # Pizzas already used in the solution are replaced with infinite slices
                 # so we avoid selecting them twice while keeping the list indices correct
                 newpizz.append(99 ** 99)
             else:
-                newpizz.append(dataset['pizzas'][i])
+                newpizz.append(dataset[dataList][i])
         print('rem', remaining)
-        reco = Methods.knapsolve({'pizzas': newpizz, 'knapsize': remaining})
+        reco = Methods.knapsolve({dataList: newpizz, size: remaining})
         return sorted(newsol + reco)
 
     def solvemc(dataset):
-        capa = dataset['knapsize']
+        capa = dataset[size]
         sol = []
-        for i in range(len(dataset['pizzas']) - 1, -1, -1):
-            if random.getrandbits(2) and capa >= dataset['pizzas'][i]:
+        for i in range(len(dataset[dataList]) - 1, -1, -1):
+            if random.getrandbits(2) and capa >= dataset[dataList][i]:
                 sol.append(i)
-                capa -= dataset['pizzas'][i]
+                capa -= dataset[dataList][i]
         st = set(sol)
-        for i in range(len(dataset['pizzas']) - 1, -1, -1):
-            if i not in st and capa >= dataset['pizzas'][i]:
+        for i in range(len(dataset[dataList]) - 1, -1, -1):
+            if i not in st and capa >= dataset[dataList][i]:
                 sol.append(i)
-                capa -= dataset['pizzas'][i]
+                capa -= dataset[dataList][i]
         return sol
 
     def randomTwo(dataset):
