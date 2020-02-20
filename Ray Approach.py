@@ -120,7 +120,7 @@ def parseInput(filein):
         if not collection:
             break  # EOF
 
-        dataset['libs'].append({'id': increment
+        dataset['libs'].append({'id': increment,
                                 'libBooks': deets[0],
                                 'sign': deets[1],
                                 'bpd': deets[2],
