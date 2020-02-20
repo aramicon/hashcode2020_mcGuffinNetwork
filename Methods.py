@@ -102,15 +102,20 @@ class Methods:
         #add some weightings for the signon offset, the collection size, and the avg. book value
         print("maxSignOnDelay ",maxSignOnDelay,"maxBookAverageScore ",maxBookAverageScore,"maxBooksPerDay ",maxBooksPerDay,"maxCollectionSize ",maxCollectionSize)
 
+        BookAverageScoreWeight = 20
+        SignOnDelayWeight = 10
+        CollectionSizeWeight = 1
+        BooksPerDayWeight = 10
+
         for l in libs:
-            l["sortweight"] = l["averageBookScore"]/maxBookAverageScore + (0-l["sign"]/maxSignOnDelay) + len(l["collection"])/maxCollectionSize + l["bpd"]/maxBooksPerDay
+            l["sortweight"] = (l["averageBookScore"]/maxBookAverageScore)*BookAverageScoreWeight + (0-l["sign"]/maxSignOnDelay)*SignOnDelayWeight + (len(l["collection"])/maxCollectionSize)*CollectionSizeWeight + (l["bpd"]/maxBooksPerDay)*BooksPerDayWeight
 
 
         #sort by delay so you start using the first lib ready
         newlist = sorted(libs, key=lambda l: l["sortweight"],reverse=True)
 
 
-        print("sorted list:",newlist)
+        print("sorted list with lambda")
         res = {}
         res["numLibs"] = numLibs
 
