@@ -74,7 +74,8 @@ def outputResults(fileout, resultList):
     for lib in resultList["libs"]:
         finalOutput += lib["id"] + " " + lib["numbooks"] + "\n"
         for l in lib["books"]:
-            finalOutput += l + "\n"
+            finalOutput += l + " "
+        finalOutput += "\n"
 
     # Printing to file / console
     # --------------------------------------------------------
