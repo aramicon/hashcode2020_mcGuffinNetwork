@@ -9,20 +9,28 @@ class Methods:
             res += dataset['pizzas'][idx]
         return 0 if res > dataset['knapsize'] else res
 
-    def test(input):
+    def test(dataset):
         print(input)
         return 'hello world'
 
     def dumb(dataset):
-        maxSize = dataset['knapsize']
-        pizzaShapes = dataset['pizzas']
+        numBooks = dataset['numbooks']
+        days=dataset["days"]
+        numlibs = dataset["numlibs"]
+        scores = dataset['scores']
+        libs = dataset["libs"]
 
-        res = set()
-        total = 0
-        for i, size in enumerate(pizzaShapes):
-            if ((total + size) <= maxSize):
-                total += size
-                res.add(str(i))
+
+        resultNumLibs = numlibs
+        res = {}
+        res["numlibs"] = 2
+        resLibDetails = []
+        for i, lib in enumerate(libs):
+            resLibDetails.append({"id": i, "numbooks":len(lib["collection"]), "books":[k for k in lib["collection"]]})
+
+        res["libs"] = resLibDetails
+
+
 
         return res
 
@@ -124,3 +132,37 @@ class Methods:
                 capa -= dataset['pizzas'][i]
         return sol
 
+    def randomTwo(dataset):
+        numberPizzaShapes = len(dataset['pizzas'])
+        maxSize = dataset['knapsize']
+        pizzaShapes = dataset['pizzas']
+        res = set()
+        total = 0
+        max_score = 0
+        best_res = {}
+        l = [1,2,3]
+        random.shuffle(l)
+
+        for att in range(1000):
+            res = set()
+            total = 0
+            pizzaShapesShuffledOrder = [x for x in range(numberPizzaShapes)]
+
+            random.shuffle(pizzaShapesShuffledOrder)
+            #print(pizzaShapesShuffledOrder)
+            for i in pizzaShapesShuffledOrder:
+                size = pizzaShapes[i]
+                if((total + size) <= maxSize):
+                    total += size
+                    res.add(i)
+            #set best if improved
+            if total > max_score:
+                max_score = total
+                best_res =  res.copy()
+                print("found new best score ", max_score)
+        print("final score = ",sum([pizzaShapes[p] for p in best_res]))
+        print(best_res)
+        print(pizzaShapes)
+        #for m in best_res:
+        #    print("item ",m," is ", pizzaShapes[m])
+        return best_res

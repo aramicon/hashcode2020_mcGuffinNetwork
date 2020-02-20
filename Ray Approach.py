@@ -10,7 +10,8 @@ switcher = {
     4: Methods.flipGreedy,
     5: Methods.knapsolve,
     6: Methods.rebuildHelper,
-    7: Methods.solvemc
+    7: Methods.solvemc,
+	8: Methods.randomTwo
 }
 
 dataset = ['a', 'b', 'c', 'd', 'e']
@@ -68,7 +69,12 @@ def outputResults(fileout, resultList):
     # Defining output string
     # --------------------------------------------------------
 
-    finalOutput = " ".join([str(x) for x in resultList])
+    #finalOutput = " ".join([str(x) for x in resultList])
+    finalOutput = resultList["numlibs"] + "\n"
+    for lib in resultList["libs"]:
+        finalOutput += lib["id"] + " " + lib["numbooks"] + "\n"
+        for l in lib["books"]:
+            finalOutput += l + "\n"
 
     # Printing to file / console
     # --------------------------------------------------------
