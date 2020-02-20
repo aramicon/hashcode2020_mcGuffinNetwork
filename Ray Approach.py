@@ -84,8 +84,8 @@ def outputResults(fileout, resultList):
     # fout.write(str(len(resultList)) + "\n")
     fout.write(finalOutput)
 
-    print(resultList)
-    print(finalOutput)
+    #print(resultList)
+    print("output saved to file")
 
     # Close File
     fout.close()
@@ -127,10 +127,9 @@ def parseInput(filein):
                                 'collection': collection
                                 })
         increment = increment + 1
-        print(increment)
 
 
-    print(dataset)
+    print("dataset loaded")
 
     # ----------------------------------------------
     # End Parsing, Close file and return data format
