@@ -37,6 +37,12 @@ class Methods:
         return res
 
     def roundR(dataset):
+        maxSize = dataset[size]
+        pizzaShapes = dataset[dataList]
+        res = set()
+        total = 0
+        max_score = 0
+        best_res = {}
 
         bpl = int(dataset['numBooks']/dataset['numLibs'])
 
@@ -67,19 +73,50 @@ class Methods:
         return result
 
     def basicH(dataset):
+        print("you basic")
         numBooks = dataset['numBooks']
         days=dataset["days"]
         numLibs = dataset["numLibs"]
         scores = dataset['scores']
         libs = dataset["libs"]
 
-        newlist = sorted(libs, key=lambda x: x.sign, reverse=True)
+        #add a new attribute to include the average score per book of a library
+        maxSignOnDelay = 0
+        maxBookAverageScore = 0
+        maxBooksPerDay = 0
+        maxCollectionSize = 0
 
+        for l in libs:
+            if (l["sign"] > maxSignOnDelay):
+                maxSignOnDelay =l["sign"]
+            l["averageBookScore"] = (sum([scores[x] for x in l["collection"]])/l["libBooks"])
+
+            if (l["averageBookScore"] > maxBookAverageScore):
+                maxBookAverageScore=l["averageBookScore"]
+            if (len(l["collection"]) > maxCollectionSize):
+                maxCollectionSize+=len(l["collection"])
+            if (l["bpd"] > maxBooksPerDay):
+                maxBooksPerDay+=l["bpd"]
+
+
+        #add some weightings for the signon offset, the collection size, and the avg. book value
+        print("maxSignOnDelay ",maxSignOnDelay,"maxBookAverageScore ",maxBookAverageScore,"maxBooksPerDay ",maxBooksPerDay,"maxCollectionSize ",maxCollectionSize)
+
+        for l in libs:
+            l["sortweight"] = l["averageBookScore"]/maxBookAverageScore + (0-l["sign"]/maxSignOnDelay) + len(l["collection"])/maxCollectionSize + l["bpd"]/maxBooksPerDay
+
+
+        #sort by delay so you start using the first lib ready
+        newlist = sorted(libs, key=lambda l: l["sortweight"],reverse=True)
+
+
+        print("sorted list:",newlist)
         res = {}
         res["numLibs"] = numLibs
+
         resLibDetails = []
-        for i, lib in enumerate(libs):
-            resLibDetails.append({"id": i, "numBooks": len(lib["collection"]), "books": [k for k in lib["collection"]]})
+        for lib in newlist:
+            resLibDetails.append({"id": lib["id"], "numBooks": len(lib["collection"]), "books": [k for k in lib["collection"]]})
 
         res["libs"] = resLibDetails
         return res
