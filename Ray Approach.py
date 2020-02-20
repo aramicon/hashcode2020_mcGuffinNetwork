@@ -6,7 +6,7 @@ switcher = {
     0: Methods.test,
     1: Methods.dumb,
     2: Methods.random,
-    3: Methods.greedy,
+    3: Methods.basicH,
     4: Methods.flipGreedy,
     5: Methods.knapsolve,
     6: Methods.rebuildHelper,

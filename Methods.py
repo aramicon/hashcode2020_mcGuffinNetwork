@@ -46,19 +46,23 @@ class Methods:
 
         return
 
-    def greedy(dataset):
-        # print([x for x in dataset['pizzas']])
-        slices = 0
-        solution = []
-        for i in range(len(dataset[dataList])):
-            # print("Greedy Search " + str(dataset['pizzas'][i]) + " : " + str(dataset['knapsize']))
+    def basicH(dataset):
+        numBooks = dataset['numBooks']
+        days=dataset["days"]
+        numLibs = dataset["numLibs"]
+        scores = dataset['scores']
+        libs = dataset["libs"]
 
-            if slices + dataset[dataList][i] <= dataset[dataList]:
-                slices = slices + dataset[dataList][i]
-                solution.append(i)
+        newlist = sorted(libs, key=lambda x: x.sign, reverse=True)
 
-            # print(slices)
-        return solution
+        res = {}
+        res["numLibs"] = numLibs
+        resLibDetails = []
+        for i, lib in enumerate(libs):
+            resLibDetails.append({"id": i, "numBooks": len(lib["collection"]), "books": [k for k in lib["collection"]]})
+
+        res["libs"] = resLibDetails
+        return res
 
     def flipGreedy(dataset):
         dataset[dataList].reverse()
