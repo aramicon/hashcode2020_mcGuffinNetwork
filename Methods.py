@@ -125,6 +125,8 @@ class Methods:
                     lib["collection"].remove(book)
                 else:
                     alreadyUsed[book] = 1
+            #also sort the books by score desc so the high ones get done first
+            lib["collection"] = sorted(lib["collection"], key=lambda b: scores[b],reverse=True)
 
         #remove any empty libraries?
         noItems = [i for i,x in enumerate(newlist) if len(x["collection"]) == 0]
