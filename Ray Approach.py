@@ -8,7 +8,7 @@ switcher = {
     1: Methods.dumb,
     2: Methods.roundR,
     3: Methods.basicH,
-    4: Methods.flipGreedy,
+    4: Methods.maxScoreRecursion,
     5: Methods.knapsolve,
     6: Methods.rebuildHelper,
     7: Methods.solvemc,
