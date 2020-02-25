@@ -73,8 +73,8 @@ class Methods:
         #
         return result
 
-    def basicH(dataset, weightings={}):
-        print("you basic")
+    def basicH(dataset, weightings={},calculateScore=False):
+        #print("you basic")
         numBooks = dataset['numBooks']
         days=dataset["days"]
         numLibs = dataset["numLibs"]
@@ -108,13 +108,15 @@ class Methods:
         CollectionSizeWeight = 1
         BooksPerDayWeight = 1
 
-        if weightings["BookAverageScoreWeight"]:
+        print(weightings)
+
+        if 'BookAverageScoreWeight' in weightings:
             BookAverageScoreWeight = weightings["BookAverageScoreWeight"]
-        if weightings["SignOnDelayWeight"]:
+        if 'SignOnDelayWeight' in weightings:
             SignOnDelayWeight = weightings["SignOnDelayWeight"]
-        if weightings["CollectionSizeWeight"]:
+        if 'CollectionSizeWeight' in weightings:
             CollectionSizeWeight = weightings["CollectionSizeWeight"]
-        if weightings["BooksPerDayWeight"]:
+        if 'BooksPerDayWeight' in weightings:
             BooksPerDayWeight = weightings["BooksPerDayWeight"]
 
 
@@ -141,50 +143,68 @@ class Methods:
         #remove any empty libraries?
         noItems = [i for i,x in enumerate(newlist) if len(x["collection"]) == 0]
         #print("alreadyUsed: ",alreadyUsed)
-        print("found ", str(len(noItems)), " empty libraries")
+        #print("found ", str(len(noItems)), " empty libraries")
         #seems to be none.
         #if len(noItems) > 0:
             #remove them
             #for l in noItems:
             #    newlist.pop(l)
 
-        print("sorted list with lambda")
+        #print("sorted list with lambda")
         res = {}
 
 
         numLibsC = 0
         resLibDetails = []
-        print("add to results object")
+        #print("add to results object")
         for lib in newlist:
             if(len(lib["collection"]) > 0):
                 numLibsC+=1
                 resLibDetails.append({"id": lib["id"], "numBooks": len(lib["collection"]), "books": [k for k in lib["collection"]]})
         res["numLibs"] = numLibsC
         res["libs"] = resLibDetails
-        print("return results")
-        
-        calculatedScore = Utils.calculateScore(dataset, res)
-        return res
-        
-    
-            
-            
+        #print("return results")
 
-    def maxScoreRecursion(dataset):
-        print("get max dcore over and over")
-        numBooks = dataset['numBooks']
-        days=dataset["days"]
-        numLibs = dataset["numLibs"]
-        scores = dataset['scores']
-        libs = dataset["libs"]
-        
-        #find highest scoring option as first library to scan...
-        
-        #issue: will this really factor in the delays?
-        
-        
-        
-        return output
+        #work out the projected score: can use this as a fitness function
+        if(calculateScore):
+            cs = Utils.calculateScore(dataset, res)
+            print("Using BookAverageScoreWeight " + str(BookAverageScoreWeight) + " SignOnDelayWeight " + str(SignOnDelayWeight) + " CollectionSizeWeight " + str(CollectionSizeWeight) + " BooksPerDayWeight " + str(BooksPerDayWeight) + "::: " + str(cs))
+            res["calculatedScore"] = Utils.calculateScore(dataset, res)
+        return res
+
+
+
+
+
+    def basicHVaryWeights(dataset):
+        print("try to find best combination of weights for dataset")
+        BookAverageScoreWeightSet = (0,1)
+        SignOnDelayWeightSet = (0,1)
+        CollectionSizeWeightSet = (0,1)
+        BooksPerDayWeightSet = (0,1)
+
+
+        bestScore = 0
+        bestScoreResult = {}
+        best_i=-5
+        best_j=-5
+        best_k=-5
+        best_l=-5
+
+        for i in BookAverageScoreWeightSet:
+            for j in SignOnDelayWeightSet:
+                for k in CollectionSizeWeightSet:
+                    for l in BooksPerDayWeightSet:
+                        res = Methods.basicH(dataset, weightings={"BookAverageScoreWeight":i,"SignOnDelayWeight":j,"CollectionSizeWeight":k,"BooksPerDayWeight":l},calculateScore=True)
+                        if res["calculatedScore"] > bestScore:
+                            bestScore = res["calculatedScore"]
+                            bestScoreResult = res
+                            best_i=i
+                            best_j=j
+                            best_k=k
+                            best_l=l
+        print("** Found best score of " + str(bestScore) + " with values i " + str(best_i) + " j " + str(best_j) + " k " + str(best_k) + " l " + str(best_l) + "**")
+        return bestScoreResult
 
     def knapsolve(dataset):
         maxscore = dataset[size]
