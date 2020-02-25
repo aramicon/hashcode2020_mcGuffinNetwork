@@ -1,5 +1,5 @@
 import random
-import progressbar
+#import progressbar
 from Utils import Utils
 
 dataList = "pizzas"
@@ -107,6 +107,7 @@ class Methods:
         SignOnDelayWeight = 1
         CollectionSizeWeight = 1
         BooksPerDayWeight = 1
+        SignOnDelayWeightExponent = 1
 
         print(weightings)
 
@@ -118,10 +119,12 @@ class Methods:
             CollectionSizeWeight = weightings["CollectionSizeWeight"]
         if 'BooksPerDayWeight' in weightings:
             BooksPerDayWeight = weightings["BooksPerDayWeight"]
+        if 'SignOnDelayWeightExponent' in weightings:
+            SignOnDelayWeightExponent = weightings["SignOnDelayWeightExponent"]
 
 
         for l in libs:
-            l["sortweight"] = (l["averageBookScore"]/maxBookAverageScore)*BookAverageScoreWeight + (0-((l["sign"]/maxSignOnDelay)*SignOnDelayWeight)**2) + (len(l["collection"])/maxCollectionSize)*CollectionSizeWeight + (l["bpd"]/maxBooksPerDay)*BooksPerDayWeight
+            l["sortweight"] = (l["averageBookScore"]/maxBookAverageScore)*BookAverageScoreWeight + (0-((l["sign"]/maxSignOnDelay)*SignOnDelayWeight)**SignOnDelayWeightExponent) + (len(l["collection"])/maxCollectionSize)*CollectionSizeWeight + (l["bpd"]/maxBooksPerDay)*BooksPerDayWeight
 
 
         #sort by delay so you start using the first lib ready
@@ -178,10 +181,11 @@ class Methods:
 
     def basicHVaryWeights(dataset):
         print("try to find best combination of weights for dataset")
-        BookAverageScoreWeightSet = (0,1)
-        SignOnDelayWeightSet = (0,1)
-        CollectionSizeWeightSet = (0,1)
-        BooksPerDayWeightSet = (0,1)
+        BookAverageScoreWeightSet = (0,0.5,1,4)
+        SignOnDelayWeightSet = (0,0.5,1,4)
+        CollectionSizeWeightSet = (0,0.5,1,4)
+        BooksPerDayWeightSet = (0,0.5,1,4)
+        SignOnDelayWeightExponent = (1,2,3)
 
 
         bestScore = 0
@@ -190,27 +194,30 @@ class Methods:
         best_j=-5
         best_k=-5
         best_l=-5
+        best_m = -5
 
         for i in BookAverageScoreWeightSet:
             for j in SignOnDelayWeightSet:
                 for k in CollectionSizeWeightSet:
                     for l in BooksPerDayWeightSet:
-                        res = Methods.basicH(dataset, weightings={"BookAverageScoreWeight":i,"SignOnDelayWeight":j,"CollectionSizeWeight":k,"BooksPerDayWeight":l},calculateScore=True)
-                        if res["calculatedScore"] > bestScore:
-                            bestScore = res["calculatedScore"]
-                            bestScoreResult = res
-                            best_i=i
-                            best_j=j
-                            best_k=k
-                            best_l=l
-        print("** Found best score of " + str(bestScore) + " with values i " + str(best_i) + " j " + str(best_j) + " k " + str(best_k) + " l " + str(best_l) + "**")
+                        for m in SignOnDelayWeightExponent:
+                            res = Methods.basicH(dataset, weightings={"BookAverageScoreWeight":i,"SignOnDelayWeight":j,"CollectionSizeWeight":k,"BooksPerDayWeight":l,"SignOnDelayWeightExponent":m},calculateScore=True)
+                            if res["calculatedScore"] > bestScore:
+                                bestScore = res["calculatedScore"]
+                                bestScoreResult = res
+                                best_i=i
+                                best_j=j
+                                best_k=k
+                                best_l=l
+                                best_m = m
+        print("** Found best score of " + str(bestScore) + " with values i " + str(best_i) + " j " + str(best_j) + " k " + str(best_k) + " l " + str(best_l) + " m " + str(best_m) + "**")
         return bestScoreResult
 
     def knapsolve(dataset):
         maxscore = dataset[size]
         dp = [None for _ in range(maxscore + 1)]
         dp[0] = []
-        for idx, item in progressbar.progressbar(list(enumerate(dataset[dataList]))):
+        for idx, item in (list(enumerate(dataset[dataList]))):
             for i in range(maxscore - item, -1, -1):
                 if dp[i] is None: continue
                 dp[i + item] = dp[i] + [idx]
