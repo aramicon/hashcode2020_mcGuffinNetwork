@@ -73,7 +73,7 @@ class Methods:
         #
         return result
 
-    def basicH(dataset):
+    def basicH(dataset, weightings={}):
         print("you basic")
         numBooks = dataset['numBooks']
         days=dataset["days"]
@@ -107,6 +107,16 @@ class Methods:
         SignOnDelayWeight = 6
         CollectionSizeWeight = 1
         BooksPerDayWeight = 1
+
+        if weightings["BookAverageScoreWeight"]:
+            BookAverageScoreWeight = weightings["BookAverageScoreWeight"]
+        if weightings["SignOnDelayWeight"]:
+            SignOnDelayWeight = weightings["SignOnDelayWeight"]
+        if weightings["CollectionSizeWeight"]:
+            CollectionSizeWeight = weightings["CollectionSizeWeight"]
+        if weightings["BooksPerDayWeight"]:
+            BooksPerDayWeight = weightings["BooksPerDayWeight"]
+
 
         for l in libs:
             l["sortweight"] = (l["averageBookScore"]/maxBookAverageScore)*BookAverageScoreWeight + (0-((l["sign"]/maxSignOnDelay)*SignOnDelayWeight)**2) + (len(l["collection"])/maxCollectionSize)*CollectionSizeWeight + (l["bpd"]/maxBooksPerDay)*BooksPerDayWeight
