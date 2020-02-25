@@ -121,10 +121,11 @@ class Methods:
             BooksPerDayWeight = weightings["BooksPerDayWeight"]
         if 'SignOnDelayWeightExponent' in weightings:
             SignOnDelayWeightExponent = weightings["SignOnDelayWeightExponent"]
-
-
+        
+        multiplierConstant = 5
+        
         for l in libs:
-            l["sortweight"] = (l["averageBookScore"]/maxBookAverageScore)*BookAverageScoreWeight + (0-((l["sign"]/maxSignOnDelay)*SignOnDelayWeight)**SignOnDelayWeightExponent) + (len(l["collection"])/maxCollectionSize)*CollectionSizeWeight + (l["bpd"]/maxBooksPerDay)*BooksPerDayWeight
+            l["sortweight"] = (1+(multiplierConstant*(l["averageBookScore"]/maxBookAverageScore)*BookAverageScoreWeight)) + (    0-(1+((l["sign"]/maxSignOnDelay)*SignOnDelayWeight)*multiplierConstant)**SignOnDelayWeightExponent) + (1+multiplierConstant*((len(l["collection"])/maxCollectionSize)*CollectionSizeWeight)) + (1+multiplierConstant*((l["bpd"]/maxBooksPerDay)*BooksPerDayWeight))
 
 
         #sort by delay so you start using the first lib ready
@@ -182,7 +183,7 @@ class Methods:
     def basicHVaryWeights(dataset):
         print("try to find best combination of weights for dataset")
         BookAverageScoreWeightSet = (0,0.5,1,4)
-        SignOnDelayWeightSet = (0,0.5,1,4)
+        SignOnDelayWeightSet = (0,0.5,1,4,8)
         CollectionSizeWeightSet = (0,0.5,1,4)
         BooksPerDayWeightSet = (0,0.5,1,4)
         SignOnDelayWeightExponent = (1,2,3)
