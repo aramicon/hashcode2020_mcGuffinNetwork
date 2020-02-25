@@ -103,8 +103,8 @@ class Methods:
         #add some weightings for the signon offset, the collection size, and the avg. book value
         print("maxSignOnDelay ",maxSignOnDelay,"maxBookAverageScore ",maxBookAverageScore,"maxBooksPerDay ",maxBooksPerDay,"maxCollectionSize ",maxCollectionSize)
 
-        BookAverageScoreWeight = 2
-        SignOnDelayWeight = 6
+        BookAverageScoreWeight = 1
+        SignOnDelayWeight = 1
         CollectionSizeWeight = 1
         BooksPerDayWeight = 1
 
@@ -162,13 +162,28 @@ class Methods:
         res["numLibs"] = numLibsC
         res["libs"] = resLibDetails
         print("return results")
+        
+        calculatedScore = Utils.calculateScore(dataset, res)
         return res
+        
+    
+            
+            
 
-    def flipGreedy(dataset):
-        dataset[dataList].reverse()
-        output = Methods.greedy(dataset)
-        output = [len(dataset[dataList]) - 1 - x for x in output]
-        output.reverse()
+    def maxScoreRecursion(dataset):
+        print("get max dcore over and over")
+        numBooks = dataset['numBooks']
+        days=dataset["days"]
+        numLibs = dataset["numLibs"]
+        scores = dataset['scores']
+        libs = dataset["libs"]
+        
+        #find highest scoring option as first library to scan...
+        
+        #issue: will this really factor in the delays?
+        
+        
+        
         return output
 
     def knapsolve(dataset):
