@@ -1,4 +1,5 @@
 import random
+import copy 
 #import progressbar
 from Utils import Utils
 
@@ -73,7 +74,7 @@ class Methods:
         #
         return result
 
-    def basicH(dataset, weightings={},calculateScore=False):
+    def basicH(dataset, weightings={},calculateScore=True):
         #print("you basic")
         numBooks = dataset['numBooks']
         days=dataset["days"]
@@ -101,32 +102,29 @@ class Methods:
 
 
         #add some weightings for the signon offset, the collection size, and the avg. book value
-        print("maxSignOnDelay ",maxSignOnDelay,"maxBookAverageScore ",maxBookAverageScore,"maxBooksPerDay ",maxBooksPerDay,"maxCollectionSize ",maxCollectionSize)
+        #print("maxSignOnDelay ",maxSignOnDelay,"maxBookAverageScore ",maxBookAverageScore,"maxBooksPerDay ",maxBooksPerDay,"maxCollectionSize ",maxCollectionSize)
 
-        BookAverageScoreWeight = 1
-        SignOnDelayWeight = 1
-        CollectionSizeWeight = 1
-        BooksPerDayWeight = 1
-        SignOnDelayWeightExponent = 1
+        BookAverageScoreWeight = 1.0
+        SignOnDelayWeight = 4.0
+        CollectionSizeWeight = 4.0
+        BooksPerDayWeight = 0.0
 
-        print(weightings)
+        
 
         if 'BookAverageScoreWeight' in weightings:
-            BookAverageScoreWeight = weightings["BookAverageScoreWeight"]
+            BookAverageScoreWeight = float(weightings["BookAverageScoreWeight"])
         if 'SignOnDelayWeight' in weightings:
-            SignOnDelayWeight = weightings["SignOnDelayWeight"]
+            SignOnDelayWeight = float(weightings["SignOnDelayWeight"])
         if 'CollectionSizeWeight' in weightings:
-            CollectionSizeWeight = weightings["CollectionSizeWeight"]
+            CollectionSizeWeight = float(weightings["CollectionSizeWeight"])
         if 'BooksPerDayWeight' in weightings:
-            BooksPerDayWeight = weightings["BooksPerDayWeight"]
-        if 'SignOnDelayWeightExponent' in weightings:
-            SignOnDelayWeightExponent = weightings["SignOnDelayWeightExponent"]
-        
-        multiplierConstant = 5
-        
+            BooksPerDayWeight = float(weightings["BooksPerDayWeight"])
+        #print("libs in method: ", libs)
+        print(BookAverageScoreWeight,"/",SignOnDelayWeight,"/",CollectionSizeWeight,"/",BooksPerDayWeight,end="")
         for l in libs:
-            l["sortweight"] = (1+(multiplierConstant*(l["averageBookScore"]/maxBookAverageScore)*BookAverageScoreWeight)) + (    0-(1+((l["sign"]/maxSignOnDelay)*SignOnDelayWeight)*multiplierConstant)**SignOnDelayWeightExponent) + (1+multiplierConstant*((len(l["collection"])/maxCollectionSize)*CollectionSizeWeight)) + (1+multiplierConstant*((l["bpd"]/maxBooksPerDay)*BooksPerDayWeight))
-
+            #print("l: ",l)
+            l["sortweight"] = (((l["averageBookScore"]/maxBookAverageScore)*BookAverageScoreWeight)+ (( (1-(l["sign"]/maxSignOnDelay))*SignOnDelayWeight))+ ((len(l["collection"])/maxCollectionSize)*CollectionSizeWeight)+ ((l["bpd"]/maxBooksPerDay)*BooksPerDayWeight))
+            #print("lib ", l["id"], " ", l["sortweight"])
 
         #sort by delay so you start using the first lib ready
         newlist = sorted(libs, key=lambda l: l["sortweight"],reverse=True)
@@ -135,12 +133,17 @@ class Methods:
 
         #take out book duplicates
         alreadyUsed = {}
-        for lib in newlist:
+        for i,lib in enumerate(newlist):
             for book in lib["collection"]:
                 if book in alreadyUsed:
+                    #randomly remove book from either current lib or lib in dict :-)
+                    #if random.randint(1,2) == 1:
                     lib["collection"].remove(book)
+                    #else:
+                    #newlist[alreadyUsed[book]]["collection"].remove(book)
+                    #alreadyUsed[book] = i
                 else:
-                    alreadyUsed[book] = 1
+                    alreadyUsed[book] = i
             #also sort the books by score desc so the high ones get done first
             lib["collection"] = sorted(lib["collection"], key=lambda b: scores[b],reverse=True)
 
@@ -182,11 +185,11 @@ class Methods:
 
     def basicHVaryWeights(dataset):
         print("try to find best combination of weights for dataset")
-        BookAverageScoreWeightSet = (0,0.5,1,4)
-        SignOnDelayWeightSet = (0,0.5,1,4,8)
-        CollectionSizeWeightSet = (0,0.5,1,4)
-        BooksPerDayWeightSet = (0,0.5,1,4)
-        SignOnDelayWeightExponent = (1,2,3)
+        BookAverageScoreWeightSet = [0]
+        SignOnDelayWeightSet = [0]
+        CollectionSizeWeightSet = [0,1,1.2,1.4,1.6]
+        BooksPerDayWeightSet = [0]
+        
 
 
         bestScore = 0
@@ -195,23 +198,24 @@ class Methods:
         best_j=-5
         best_k=-5
         best_l=-5
-        best_m = -5
+     
 
         for i in BookAverageScoreWeightSet:
             for j in SignOnDelayWeightSet:
                 for k in CollectionSizeWeightSet:
-                    for l in BooksPerDayWeightSet:
-                        for m in SignOnDelayWeightExponent:
-                            res = Methods.basicH(dataset, weightings={"BookAverageScoreWeight":i,"SignOnDelayWeight":j,"CollectionSizeWeight":k,"BooksPerDayWeight":l,"SignOnDelayWeightExponent":m},calculateScore=True)
-                            if res["calculatedScore"] > bestScore:
-                                bestScore = res["calculatedScore"]
-                                bestScoreResult = res
-                                best_i=i
-                                best_j=j
-                                best_k=k
-                                best_l=l
-                                best_m = m
-        print("** Found best score of " + str(bestScore) + " with values i " + str(best_i) + " j " + str(best_j) + " k " + str(best_k) + " l " + str(best_l) + " m " + str(best_m) + "**")
+                    for l in BooksPerDayWeightSet:                      
+                        res = Methods.basicH(copy.deepcopy(dataset), weightings={"BookAverageScoreWeight":i,"SignOnDelayWeight":j,"CollectionSizeWeight":k,"BooksPerDayWeight":l},calculateScore=True)
+                      
+                        print(" i ", i, "j ", j, " k ", k, " l ", l, " : ", str(res["calculatedScore"]))
+                        if res["calculatedScore"] > bestScore:
+                            bestScore = res["calculatedScore"]
+                            bestScoreResult = res
+                            best_i=i
+                            best_j=j
+                            best_k=k
+                            best_l=l
+        print("** Found best score of " + str(bestScore) + " with values i " + str(best_i) + " j " + str(best_j) + " k " + str(best_k) + " l " + str(best_l) + " m " + "**")
+        
         return bestScoreResult
 
     def knapsolve(dataset):

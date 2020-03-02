@@ -12,7 +12,7 @@ switcher = {
     5: Methods.knapsolve,
     6: Methods.rebuildHelper,
     7: Methods.solvemc,
-	8: Methods.randomTwo
+    8: Methods.randomTwo
 }
 
 dataset = ['a', 'b', 'c', 'd', 'e']
@@ -118,7 +118,7 @@ def parseInput(filein):
 
         deets = [int(x) for x in fin.readline().split()]
         collection = [int(x) for x in fin.readline().split()]
-
+        #print("read lib ", increment)
         if not collection:
             break  # EOF
 
